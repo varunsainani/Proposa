@@ -34,3 +34,4 @@ screenshots/
 # editor
 .idea/
 .vscode/
+shots.cjs

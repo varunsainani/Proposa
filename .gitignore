@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# env
+.env
+.env.local
+.env*.local
+backend/.env
+frontend/.env.local
+pyservice/.env
+
+# build output
+dist/
+.next/
+out/
+**/dist/
+**/.next/
+
+# python
+__pycache__/
+**/__pycache__/
+*.pyc
+.venv/
+pyservice/.vercel
+
+# misc
+.DS_Store
+*.log
+npm-debug.log*
+.vercel
+screenshots/
+
+# editor
+.idea/
+.vscode/

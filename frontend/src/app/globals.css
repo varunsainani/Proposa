@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/*
+  Proposa design system - editorial / proposal-document identity.
+  LIGHT is the brand (warm paper); dark fully supported.
+  Distinct from the other projects: serif display headings, warm ivory/stone
+  surfaces, hairline rules, tabular figures, one restrained ink accent.
+*/
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif-display), Georgia, "Times New Roman", serif;
+
+  /* ink accent */
+  --color-ink-50: #eef0fb;
+  --color-ink-100: #dfe2f6;
+  --color-ink-300: #aab0e6;
+  --color-ink-400: #7b83d6;
+  --color-ink-500: #4f57b8;
+  --color-ink-600: #3f4699;
+  --color-ink-700: #343a82;
+  /* warm secondary accent (used sparingly) */
+  --color-amber-500: #b4783a;
+  --color-emerald-500: #2f6b4f;
+  --color-rose-500: #b4434a;
+}
+
+/* ---- semantic surface tokens (theme-switched). LIGHT is default. ---- */
+:root,
+.light {
+  --bg: #f7f4ed;
+  --bg-soft: #fbf9f4;
+  --surface: #fffefb;
+  --surface-2: #f1ece1;
+  --surface-hover: #ece6d9;
+  --border: #e4ddcd;
+  --border-soft: #efe9dc;
+  --text: #211d16;
+  --text-muted: #6a6053;
+  --text-faint: #968b78;
+  --primary: #3f4699;
+  --primary-strong: #343a82;
+  --accent: #b4783a;
+  --ok: #2f6b4f;
+  --err: #b4434a;
+  --rule: #ddd4c2;
+  --ring: rgba(63, 70, 153, 0.35);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #141109;
+  --bg-soft: #191510;
+  --surface: #1e1a13;
+  --surface-2: #241f17;
+  --surface-hover: #2b251b;
+  --border: #322b20;
+  --border-soft: #271f15;
+  --text: #ece6d9;
+  --text-muted: #a89c87;
+  --text-faint: #7c7059;
+  --primary: #9aa1ec;
+  --primary-strong: #b3b9f3;
+  --accent: #d59a5c;
+  --ok: #5cc69a;
+  --err: #e98088;
+  --rule: #3a3225;
+  --ring: rgba(154, 161, 236, 0.4);
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    background: var(--bg);
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif);
+  }
+  ::selection {
+    background: var(--ring);
+  }
+}
+
+@layer utilities {
+  .font-serif { font-family: var(--font-serif); }
+  .font-sans { font-family: var(--font-sans); }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .bg-base { background: var(--bg); }
+  .bg-surface { background: var(--surface); }
+  .bg-surface-2 { background: var(--surface-2); }
+  .text-fg { color: var(--text); }
+  .text-muted { color: var(--text-muted); }
+  .text-faint { color: var(--text-faint); }
+  .border-default { border-color: var(--border); }
+  .rule { border-color: var(--rule); }
+
+  /* subtle warm paper texture for the app background */
+  .bg-paper {
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(120, 100, 60, 0.04) 1px, transparent 0);
+    background-size: 28px 28px;
+  }
+  .focus-ring:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ring);
+  }
+}
+
+/* the rendered proposal document */
+.doc {
+  background: var(--surface);
+  color: var(--text);
+}
+.doc-rule {
+  border-top: 1px solid var(--rule);
+}
+
+@keyframes proposa-shimmer {
+  0% { background-position: -480px 0; }
+  100% { background-position: 480px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-hover) 50%, var(--surface-2) 75%);
+  background-size: 960px 100%;
+  animation: proposa-shimmer 1.4s linear infinite;
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
+}

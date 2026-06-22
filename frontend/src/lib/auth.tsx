@@ -39,8 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const ok = await api.refresh();
         if (ok && !cancelled) {
-          const me = await api.get<User>("/auth/me");
-          if (!cancelled) setUser(me);
+          const me = await api.get<{ user: User }>("/auth/me");
+          if (!cancelled) setUser(me.user);
         }
       } catch {
         // No valid session; remain logged out.

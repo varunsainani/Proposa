@@ -58,6 +58,11 @@ function formatDate(d: Date | string): string {
   return date.toISOString().slice(0, 10);
 }
 
+// Sentinel byte (unused control char) to shuttle the Euro sign past the Latin-1
+// strip below, then restored. WinAnsi/Helvetica can encode U+20AC, but it sits
+// outside the \x20-\xFF range the strip allows, so it must be preserved by hand.
+const EURO_SENTINEL = "\x01";
+
 /** Sanitize to WinAnsi-safe text (StandardFonts cannot encode arbitrary glyphs). */
 function safe(text: string): string {
   return (text ?? "")
@@ -66,8 +71,11 @@ function safe(text: string): string {
     .replace(/[–—]/g, "-")
     .replace(/…/g, "...")
     .replace(/ /g, " ")
+    // Keep the Euro sign (WinAnsi-encodable) across the Latin-1 strip below.
+    .replace(/€/g, EURO_SENTINEL)
     // Drop anything outside the Latin-1 range pdf-lib's WinAnsi can encode.
-    .replace(/[^\x09\x0A\x0D\x20-\xFF]/g, "");
+    .replace(/[^\x09\x0A\x0D\x20-\xFF]/g, "")
+    .replace(new RegExp(EURO_SENTINEL, "g"), "€");
 }
 
 function newPage(ctx: Ctx): void {

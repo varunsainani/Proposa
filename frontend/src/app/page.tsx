@@ -97,11 +97,16 @@ export default async function LandingPage() {
             </div>
             <dl className="mt-4 space-y-2.5 text-sm">
               <ProofRow icon={Target} label={t("beforeBudget")} value="R$ 25.000,00" />
-              <ProofRow icon={Target} label={t("beforeTimeline")} value="6 weeks" />
+              <ProofRow icon={Target} label={t("beforeTimeline")} value={t("beforeTimelineValue")} />
               <div>
                 <dt className="text-xs text-faint">{t("beforeKeywords")}</dt>
                 <dd className="mt-1.5 flex flex-wrap gap-1.5">
-                  {["website", "seo", "blog", "8 pages"].map((kw) => (
+                  {[
+                    t("beforeKeyword1"),
+                    t("beforeKeyword2"),
+                    t("beforeKeyword3"),
+                    t("beforeKeyword4"),
+                  ].map((kw) => (
                     <span
                       key={kw}
                       className="rounded border border-[var(--border)] bg-surface px-1.5 py-0.5 text-xs text-muted"
@@ -115,9 +120,9 @@ export default async function LandingPage() {
                 <dt className="text-xs text-faint">{t("beforeMatched")}</dt>
                 <dd className="mt-1.5 space-y-1">
                   {[
-                    ["Marketing website build", 0.92],
-                    ["On-page SEO setup", 0.81],
-                    ["Editorial blog module", 0.74],
+                    [t("beforeMatched1"), 0.92],
+                    [t("beforeMatched2"), 0.81],
+                    [t("beforeMatched3"), 0.74],
                   ].map(([name, score]) => (
                     <div
                       key={name as string}
@@ -161,7 +166,7 @@ export default async function LandingPage() {
                 {t("afterLabel")}
               </p>
               <h3 className="mt-1 font-serif text-xl leading-tight">
-                Marketing Website &amp; SEO Proposal
+                {t("afterHeading")}
               </h3>
             </div>
             <div className="space-y-4 px-6 py-5 text-sm">
@@ -177,9 +182,9 @@ export default async function LandingPage() {
                 </p>
                 <div className="space-y-1.5">
                   {[
-                    ["8-page website build", "R$ 16.260,00"],
-                    ["On-page SEO setup", "R$ 4.336,00"],
-                    ["Blog module + 4 posts", "R$ 3.794,00"],
+                    [t("afterItem1"), "R$ 16.260,00"],
+                    [t("afterItem2"), "R$ 4.336,00"],
+                    [t("afterItem3"), "R$ 3.794,00"],
                   ].map(([name, amt]) => (
                     <div
                       key={name}

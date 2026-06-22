@@ -31,9 +31,9 @@ import type {
 const lineItemSchema = z.object({
   name: z.string().min(1),
   description: z.string().default(""),
-  quantity: z.coerce.number().int().positive(),
+  quantity: z.coerce.number().int().positive().max(100000),
   unit: z.string().min(1),
-  unitPriceCents: z.coerce.number().int().nonnegative(),
+  unitPriceCents: z.coerce.number().int().nonnegative().max(1_000_000_000_000),
   catalogItemId: z.string().nullish().transform((v) => v ?? null),
 });
 

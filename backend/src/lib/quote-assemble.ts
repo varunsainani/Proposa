@@ -87,6 +87,19 @@ function toInt(n: unknown, fallback = 0): number {
 }
 
 /**
+ * Upper bound for any cents value. Safely below the Postgres int8 max and below
+ * Number.MAX_SAFE_INTEGER, so a hallucinated huge-but-integer price cannot make
+ * a total Infinity or overflow the INSERT. The downstream BigInt(Math.round())
+ * then can never throw.
+ */
+const MAX_CENTS = 9_000_000_000_000; // 9e12
+
+/** Clamp any number to a finite, nonnegative integer within [0, MAX_CENTS]. */
+function safeCents(n: number): number {
+  return Math.max(0, Math.min(Math.round(Number.isFinite(n) ? n : 0), MAX_CENTS));
+}
+
+/**
  * Produce the final QuoteData. Every amount is recomputed here:
  *   amountCents   = quantity * unitPriceCents   (per line)
  *   subtotalCents = sum(amountCents)
@@ -94,19 +107,20 @@ function toInt(n: unknown, fallback = 0): number {
  */
 export function assembleQuoteData(args: AssembleArgs): QuoteData {
   const { draft, matched, currency } = args;
-  const discountCents = Math.max(0, toInt(args.discountCents, 0));
-  const taxCents = Math.max(0, toInt(args.taxCents, 0));
+  const discountCents = safeCents(toInt(args.discountCents, 0));
+  const taxCents = safeCents(toInt(args.taxCents, 0));
 
   const lineItems: QuoteLineItem[] = draft.lineItems.map((li) => {
-    const quantity = Math.max(0, toInt(li.quantity, 1));
-    const unitPriceCents = Math.max(0, toInt(li.unitPriceCents, 0));
+    // Clamp quantity to a sane finite integer so quantity * price stays bounded.
+    const quantity = Math.max(0, Math.min(toInt(li.quantity, 1), 100000));
+    const unitPriceCents = safeCents(toInt(li.unitPriceCents, 0));
     return {
       name: String(li.name ?? "").trim() || "Item",
       description: String(li.description ?? "").trim(),
       quantity,
       unit: String(li.unit ?? "").trim() || "item",
       unitPriceCents,
-      amountCents: quantity * unitPriceCents,
+      amountCents: safeCents(quantity * unitPriceCents),
       catalogItemId:
         typeof li.catalogItemId === "string" && li.catalogItemId
           ? li.catalogItemId
@@ -114,8 +128,10 @@ export function assembleQuoteData(args: AssembleArgs): QuoteData {
     };
   });
 
-  const subtotalCents = lineItems.reduce((sum, li) => sum + li.amountCents, 0);
-  const totalCents = Math.max(0, subtotalCents - discountCents + taxCents);
+  const subtotalCents = safeCents(
+    lineItems.reduce((sum, li) => sum + li.amountCents, 0),
+  );
+  const totalCents = safeCents(subtotalCents - discountCents + taxCents);
 
   return {
     summary: String(draft.summary ?? "").trim(),

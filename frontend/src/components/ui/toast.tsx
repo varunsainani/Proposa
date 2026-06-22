@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { CheckCircle2, AlertCircle, Info, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type ToastTone = "success" | "error" | "info";
 
@@ -38,6 +39,7 @@ const accents: Record<ToastTone, string> = {
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const t = useTranslations("common");
   const [items, setItems] = useState<ToastItem[]>([]);
 
   const remove = useCallback((id: number) => {
@@ -73,7 +75,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <button
                 onClick={() => remove(item.id)}
                 className="rounded p-0.5 text-faint hover:text-fg focus-ring"
-                aria-label="Dismiss"
+                aria-label={t("dismiss")}
               >
                 <X className="h-4 w-4" />
               </button>

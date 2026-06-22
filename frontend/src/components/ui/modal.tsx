@@ -19,6 +19,7 @@ export function Modal({
   children: ReactNode;
   footer?: ReactNode;
 }) {
+  const t = useTranslations("common");
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -53,7 +54,7 @@ export function Modal({
             <button
               onClick={onClose}
               className="rounded-md p-1 text-faint hover:bg-[var(--surface-hover)] hover:text-fg focus-ring"
-              aria-label="Close"
+              aria-label={t("close")}
             >
               <X className="h-4 w-4" />
             </button>

@@ -63,8 +63,8 @@ async function main() {
     ok(r.status === 200 && r.data?.id === qid, `refine (${r.status})`);
     ok(Array.isArray(r.data?.messages) && r.data.messages.length >= 2, `refine appended messages (${r.data?.messages?.length})`);
 
-    r = await req("GET", `/quotes/${qid}/pdf`, { token, raw: true });
-    ok(r.status === 200 && r.ctype?.includes("application/pdf") && r.buf!.slice(0, 4).toString() === "%PDF", `PDF export (${r.status}, ${r.buf?.length} bytes)`);
+    const pr = (await req("GET", `/quotes/${qid}/pdf`, { token, raw: true })) as { status: number; buf: Buffer; ctype: string | null };
+    ok(pr.status === 200 && !!pr.ctype?.includes("application/pdf") && pr.buf.slice(0, 4).toString() === "%PDF", `PDF export (${pr.status}, ${pr.buf?.length} bytes)`);
 
     r = await req("PATCH", `/quotes/${qid}`, { token, body: { status: "FINAL" } });
     ok(r.status === 200 && r.data?.status === "FINAL", "PATCH status FINAL");

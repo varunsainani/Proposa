@@ -41,8 +41,8 @@ export default function SettingsPage() {
     if (!name.trim()) return;
     setSaving(true);
     try {
-      const updated = await api.patch<User>("/auth/me", { name: name.trim() });
-      setUser(updated);
+      const res = await api.patch<{ user: User }>("/auth/me", { name: name.trim() });
+      setUser(res.user);
       toast.success(t("profileSaved"));
     } catch {
       toast.error(t("profileFailed"));
@@ -54,7 +54,10 @@ export default function SettingsPage() {
   function changeLanguage(next: Locale) {
     document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; samesite=lax`;
     // Persist preference to the account (best effort).
-    void api.patch<User>("/auth/me", { locale: next }).then(setUser).catch(() => {});
+    void api
+      .patch<{ user: User }>("/auth/me", { locale: next })
+      .then((r) => setUser(r.user))
+      .catch(() => {});
     router.refresh();
   }
 

@@ -36,6 +36,7 @@ const NAV: NavItem[] = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const t = useTranslations("nav");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const pathname = usePathname();
 
@@ -66,7 +67,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <button
                 onClick={() => setDrawerOpen(false)}
                 className="mr-3 rounded-md p-1.5 text-faint hover:bg-[var(--surface-hover)] focus-ring"
-                aria-label="Close menu"
+                aria-label={t("closeMenu")}
               >
                 <X className="h-5 w-5" />
               </button>
